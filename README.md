@@ -30,6 +30,7 @@
 
 ```bash
 $ yarn install
+$ yarn global add node-gyp
 ```
 
 ## Running the app
