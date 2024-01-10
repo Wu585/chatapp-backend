@@ -14,10 +14,12 @@ import { JwtAuthGuard } from "./jwt-auth.guard";
   imports: [
     UsersModule,
     PassportModule,
-    JwtModule.register({
+    JwtModule.registerAsync({
       global: true,
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: "600s" }
+      useFactory: async () => ({
+        secret: jwtConstants.secret,
+        signOptions: { expiresIn: "1d" }
+      })
     })
   ],
   controllers: [AuthController],
