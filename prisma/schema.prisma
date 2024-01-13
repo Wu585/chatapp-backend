@@ -36,6 +36,7 @@ model Chat {
 enum Role {
   user
   system
+  assistant
 }
 
 model Message {

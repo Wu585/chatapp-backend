@@ -1,5 +1,7 @@
-import {Injectable} from '@nestjs/common';
-import {PrismaService} from "../prisma.service";
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { UpdateChatDto } from "./dto/update-chat.dto";
+import { CreateChatDto } from "./dto/create-chat.dto";
 
 @Injectable()
 export class ChatsService {
@@ -8,25 +10,35 @@ export class ChatsService {
 
   getAllChats(userId: string) {
     return this.prisma.chat.findMany({
-      where: {userId}
+      where: { userId }
     });
   }
 
-  createChat(title: string, userId: string) {
+  createChat(userId: string, dto: CreateChatDto) {
     return this.prisma.chat.create({
       data: {
-        title,
-        userId
+        userId,
+        ...dto
       }
-    })
+    });
   }
 
-  deleteChat(id: string, userId: string) {
+  updateChat(userId: string, id: string, dto: UpdateChatDto) {
+    return this.prisma.chat.update({
+      where: {
+        userId,
+        id
+      },
+      data: dto
+    });
+  }
+
+  deleteChat(userId: string, id: string) {
     return this.prisma.chat.delete({
       where: {
         userId,
         id
       }
-    })
+    });
   }
 }

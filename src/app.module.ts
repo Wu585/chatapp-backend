@@ -8,17 +8,14 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
 import { TransformInterceptor } from "./interceptors/transform.interceptor";
 import { MessagesModule } from './messages/messages.module';
 import { ChatsModule } from './chats/chats.module';
+import { OpenaiModule } from './openai/openai.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, MessagesModule, ChatsModule],
+  imports: [AuthModule, UsersModule, MessagesModule, ChatsModule, OpenaiModule],
   controllers: [AppController],
   providers: [
     AppService,
-    PrismaService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: TransformInterceptor
-    }
+    PrismaService
   ]
 })
 export class AppModule {
