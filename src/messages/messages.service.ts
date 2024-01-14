@@ -61,4 +61,14 @@ export class MessagesService {
     });
   }
 
+  createSseMessage(dto: CreateMessageDto) {
+    const { role, content, chatId, model } = dto;
+    return this.openService.createStreamChatCompletion([
+      {
+        role,
+        content
+      }
+    ], model);
+  }
+
 }

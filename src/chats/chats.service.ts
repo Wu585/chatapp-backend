@@ -10,7 +10,10 @@ export class ChatsService {
 
   getAllChats(userId: string) {
     return this.prisma.chat.findMany({
-      where: { userId }
+      where: { userId },
+      orderBy: {
+        createdAt: "desc"
+      }
     });
   }
 
