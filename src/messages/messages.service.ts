@@ -11,6 +11,15 @@ export class MessagesService {
   ) {
   }
 
+  findAll(userId: string, chatId: string) {
+    return this.prisma.message.findMany({
+      where: {
+        userId,
+        chatId
+      }
+    });
+  }
+
   async create(userId: string, dto: CreateMessageDto) {
     const { role, content, model, chatId } = dto;
 
