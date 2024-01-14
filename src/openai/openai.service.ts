@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import OpenAI from "openai";
+import * as process from "process";
 
 const agent = new HttpsProxyAgent("http://127.0.0.1:7890");
 
@@ -12,7 +13,7 @@ export class OpenaiService {
 
   constructor() {
     this.openai = new OpenAI({
-      apiKey: "",
+      apiKey: process.env.OPENAI_API_KEY,
       httpAgent: agent
     });
   }
