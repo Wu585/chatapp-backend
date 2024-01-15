@@ -1,9 +1,7 @@
-import { Body, Controller, Get, Header, Param, Post, Query, Request, Sse } from "@nestjs/common";
-import { MessagesService } from "./messages.service";
-import { CreateMessageDto } from "./dto/create-message.dto";
-import { QueryMessagesDto } from "../chats/dto/query-messages.dto";
-import { interval, Observable, map } from "rxjs";
-import { Public } from "../auth/constants";
+import {Body, Controller, Get, Post, Query, Request, Sse} from "@nestjs/common";
+import {MessagesService} from "./messages.service";
+import {CreateMessageDto} from "./dto/create-message.dto";
+import {QueryMessagesDto} from "../chats/dto/query-messages.dto";
 
 export interface MessageEvent {
   data: string | object;
@@ -14,7 +12,8 @@ export interface MessageEvent {
 
 @Controller("messages")
 export class MessagesController {
-  constructor(private readonly messagesService: MessagesService) {
+  constructor(
+    private readonly messagesService: MessagesService) {
   }
 
   @Get()
@@ -27,12 +26,10 @@ export class MessagesController {
     return this.messagesService.create(req.user.id, dto);
   }
 
-  @Get("stream")
-  @Header("Content-type", "text/event-stream")
+  @Post("sse")
   @Sse()
-  sse(@Request() req,@Query() dto:CreateMessageDto,): Promise<Observable<MessageEvent>> {
-    console.log(req.user);
-    return this.messagesService.createSseMessage(dto);
+  sse(@Request() req, @Body() dto: CreateMessageDto) {
+    return this.messagesService.createSseMessage(req.user, dto);
   }
 
 }

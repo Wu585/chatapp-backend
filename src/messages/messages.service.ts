@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { OpenaiService } from "../openai/openai.service";
-import { CreateMessageDto } from "./dto/create-message.dto";
-import { PrismaService } from "../prisma.service";
+import {Injectable} from "@nestjs/common";
+import {OpenaiService} from "../openai/openai.service";
+import {CreateMessageDto} from "./dto/create-message.dto";
+import {PrismaService} from "../prisma.service";
 
 @Injectable()
 export class MessagesService {
@@ -21,7 +21,7 @@ export class MessagesService {
   }
 
   async create(userId: string, dto: CreateMessageDto) {
-    const { role, content, model, chatId } = dto;
+    const {role, content, model, chatId} = dto;
 
     const currentMessage = await this.prisma.message.create({
       data: {
@@ -61,14 +61,15 @@ export class MessagesService {
     });
   }
 
-  createSseMessage(dto: CreateMessageDto) {
-    const { role, content, chatId, model } = dto;
+  async createSseMessage(userId: string, dto: CreateMessageDto) {
+    const {role, content, chatId, model} = dto;
+
     return this.openService.createStreamChatCompletion([
       {
         role,
         content
       }
-    ], model);
+    ], model, userId);
   }
 
 }
