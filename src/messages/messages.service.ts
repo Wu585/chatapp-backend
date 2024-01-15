@@ -16,6 +16,9 @@ export class MessagesService {
       where: {
         userId,
         chatId
+      },
+      orderBy: {
+        createdAt: "asc"
       }
     });
   }
