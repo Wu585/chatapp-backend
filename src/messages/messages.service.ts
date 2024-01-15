@@ -2,6 +2,7 @@ import {Injectable} from "@nestjs/common";
 import {OpenaiService} from "../openai/openai.service";
 import {CreateMessageDto} from "./dto/create-message.dto";
 import {PrismaService} from "../prisma.service";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class MessagesService {
@@ -23,7 +24,7 @@ export class MessagesService {
     });
   }
 
-  async create(userId: string, dto: CreateMessageDto) {
+  async getTmpMessages(userId: string, dto: CreateMessageDto) {
     const {role, content, model, chatId} = dto;
 
     const currentMessage = await this.prisma.message.create({
@@ -52,20 +53,73 @@ export class MessagesService {
       content: message.content
     }));
 
-    const res = await this.openService.createChatCompletion([...mapMessages, mapCurrentMessage], model);
+    return [...mapMessages, mapCurrentMessage]
+  }
+
+  async create(userId: string, dto: CreateMessageDto) {
+    const {model, chatId} = dto;
+
+    const messages = await this.getTmpMessages(userId, dto)
+
+    const completion = await this.openService.openai.chat.completions.create({
+      messages,
+      model
+    });
 
     return this.prisma.message.create({
       data: {
         userId,
         chatId,
-        content: res.content,
-        role: res.role
+        content: completion.choices[0].message.content,
+        role: completion.choices[0].message.role
       }
     });
   }
 
-  async createSseMessage(userId: string, dto: CreateMessageDto) {
-    return this.openService.createStreamChatCompletion(userId, dto);
+  async createSseMessage(userId: string, dto: CreateMessageDto): Promise<Observable<{
+    data: string;
+  }>> {
+    const messages = await this.getTmpMessages(userId, dto)
+
+    const {model, chatId} = dto;
+
+    return new Observable<{ data: string }>((subscriber) => {
+      let str = ""
+
+      this.openService.openai.chat.completions.create({
+        model,
+        messages,
+        stream: true
+      }).then(async stream => {
+        let resRole = undefined
+        for await (const chunk of stream) {
+          const content = chunk.choices[0]?.delta?.content;
+
+          const currentRole = chunk.choices[0]?.delta?.role
+
+          if (currentRole) {
+            resRole = currentRole
+          }
+
+          if (content) {
+            str += content
+          }
+
+          subscriber.next({data: content || ""});
+        }
+
+        await this.prisma.message.create({
+          data: {
+            userId,
+            chatId,
+            role: resRole,
+            content: str
+          }
+        });
+
+        subscriber.complete();
+      });
+    });
   }
 
 }

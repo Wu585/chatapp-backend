@@ -21,16 +21,16 @@ export class OpenaiService {
     });
   }
 
-  async createChatCompletion(messages: ChatCompletionRequestMessage[], model: string) {
+  /*async createChatCompletion(messages: ChatCompletionRequestMessage[], model: string) {
     const completion = await this.openai.chat.completions.create({
       messages,
       model
     });
 
     return completion.choices[0].message;
-  }
+  }*/
 
-  async createStreamChatCompletion(userId: string, dto: CreateMessageDto): Promise<Observable<{
+  /*async createStreamChatCompletion(userId: string, dto: CreateMessageDto): Promise<Observable<{
     data: string;
   }>> {
 
@@ -99,5 +99,5 @@ export class OpenaiService {
         subscriber.complete();
       });
     });
-  }
+  }*/
 }
