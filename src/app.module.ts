@@ -9,9 +9,10 @@ import { TransformInterceptor } from "./interceptors/transform.interceptor";
 import { MessagesModule } from './messages/messages.module';
 import { ChatsModule } from './chats/chats.module';
 import { OpenaiModule } from './openai/openai.module';
+import { AudioModule } from './audio/audio.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, MessagesModule, ChatsModule, OpenaiModule],
+  imports: [AuthModule, UsersModule, MessagesModule, ChatsModule, OpenaiModule, AudioModule],
   controllers: [AppController],
   providers: [
     AppService,
