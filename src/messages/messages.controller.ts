@@ -29,7 +29,7 @@ export class MessagesController {
   @Post("sse")
   @Sse()
   sse(@Request() req, @Body() dto: CreateMessageDto) {
-    return this.messagesService.createSseMessage(req.user, dto);
+    return this.messagesService.createSseMessage(req.user.id, dto);
   }
 
 }

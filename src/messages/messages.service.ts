@@ -62,14 +62,7 @@ export class MessagesService {
   }
 
   async createSseMessage(userId: string, dto: CreateMessageDto) {
-    const {role, content, chatId, model} = dto;
-
-    return this.openService.createStreamChatCompletion([
-      {
-        role,
-        content
-      }
-    ], model, userId);
+    return this.openService.createStreamChatCompletion(userId, dto);
   }
 
 }
