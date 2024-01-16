@@ -10,16 +10,13 @@ export class AudioService {
   constructor(private readonly openaiService: OpenaiService) {
   }
 
-  async create(createAudioDto: CreateAudioDto) {
-    const speechFile = path.resolve("./speech.mp3");
-    console.log(speechFile);
+  async create(dto: CreateAudioDto) {
+    const {model,voice,input} = dto
     const mp3 = await this.openaiService.openai.audio.speech.create({
-      model: "tts-1",
-      voice: "alloy",
-      input: "Today is a wonderful day to build something people love!",
+      model,
+      voice,
+      input,
     })
-    const buffer = Buffer.from(await mp3.arrayBuffer());
-    // await fs.promises.writeFile(speechFile, buffer);
 
     return Buffer.from(await mp3.arrayBuffer())
   }
