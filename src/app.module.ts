@@ -14,9 +14,10 @@ import { ImagesModule } from './images/images.module';
 import { VideoModule } from './video/video.module';
 import { ReplicateModule } from './replicate/replicate.module';
 import { MusicModule } from './music/music.module';
+import { ActorsModule } from './actors/actors.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, MessagesModule, ChatsModule, OpenaiModule, AudioModule, ImagesModule, VideoModule, ReplicateModule, MusicModule],
+  imports: [AuthModule, UsersModule, MessagesModule, ChatsModule, OpenaiModule, AudioModule, ImagesModule, VideoModule, ReplicateModule, MusicModule, ActorsModule],
   controllers: [AppController],
   providers: [
     AppService,
