@@ -4,13 +4,10 @@ import {ValidationPipe} from "@nestjs/common";
 import {HttpExceptionFilter} from "./filters/http-exception.filter";
 import {ResponseInterceptor} from "./interceptors/transform.interceptor";
 import {NestExpressApplication} from "@nestjs/platform-express"
-import * as cors from "cors";
 import {join} from "path"
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
-  app.use(cors());
 
   app.useGlobalPipes(new ValidationPipe({
     // 去除在类上不存在的字段

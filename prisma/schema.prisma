@@ -59,8 +59,6 @@ model Tag {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  actors Actor[]
 }
 
 model Actor {
@@ -70,9 +68,6 @@ model Actor {
   remark    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  Tag   Tag    @relation(fields: [tagId], references: [id])
-  tagId String @map(name: "tag_id")
 }
 
 model Image {

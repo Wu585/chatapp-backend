@@ -14,7 +14,7 @@ export type ChatCompletionRequestMessage = OpenAI.Chat.Completions.ChatCompletio
 export class OpenaiService {
   openai: OpenAI;
 
-  constructor(private readonly prisma: PrismaService) {
+  constructor() {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY1,
       httpAgent: agent
