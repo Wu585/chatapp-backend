@@ -10,9 +10,10 @@ import { MessagesModule } from './messages/messages.module';
 import { ChatsModule } from './chats/chats.module';
 import { OpenaiModule } from './openai/openai.module';
 import { AudioModule } from './audio/audio.module';
+import { ImagesModule } from './images/images.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, MessagesModule, ChatsModule, OpenaiModule, AudioModule],
+  imports: [AuthModule, UsersModule, MessagesModule, ChatsModule, OpenaiModule, AudioModule, ImagesModule],
   controllers: [AppController],
   providers: [
     AppService,
