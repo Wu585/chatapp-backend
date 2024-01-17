@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete} from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Req} from '@nestjs/common';
 import {ImagesService} from './images.service';
 import {CreateImageDto} from './dto/create-image.dto';
 import {UpdateImageDto} from './dto/update-image.dto';
@@ -10,14 +10,13 @@ export class ImagesController {
   }
 
   @Post()
-  create(@Body() dto: CreateImageDto) {
-    return this.imagesService.create(dto);
+  create(@Req() req,@Body() dto: CreateImageDto) {
+    return this.imagesService.create(req.user.id,dto);
   }
 
   @Get("history")
-  findAll() {
-    const path = join(__dirname, "../tmp-images")
-    return this.imagesService.getHistoryImages(path);
+  async findAll(@Req() req) {
+    return this.imagesService.getHistoryImages(req.user.id);
   }
 
   @Get(':id')

@@ -5,18 +5,21 @@ import {OpenaiService} from "../openai/openai.service";
 import {HttpService} from "@nestjs/axios";
 import {join} from "path"
 import * as fs from "fs"
+import {PrismaService} from "../prisma.service";
 
 @Injectable()
 export class ImagesService {
   constructor(
     private readonly openaiService: OpenaiService,
-    private readonly httpService: HttpService) {
+    private readonly httpService: HttpService,
+    private readonly prisma: PrismaService
+  ) {
   }
 
-  async create(dto: CreateImageDto) {
+  async create(userId: string, dto: CreateImageDto) {
     const {model, prompt, n, size} = dto
 
-    const image = await this.openaiService.openai.images.generate({
+    const images = await this.openaiService.openai.images.generate({
       model,
       prompt,
       n,
@@ -27,10 +30,23 @@ export class ImagesService {
 
     this.checkDir()
 
-    const file = join(imagesDirectoryPath, new Date().getTime().toString() + ".png")
-    await this.saveImage(image.data[0].url, file)
+    const promiseArray = images.data.map(async image => {
+      const filename = new Date().getTime().toString() + ".png"
+      const file = join(imagesDirectoryPath, filename)
+      console.log(file);
+      await this.prisma.image.create({
+        data: {
+          userId,
+          prompt,
+          filename
+        }
+      })
+      await this.saveImage(image.url, file)
+    })
 
-    return image.data;
+    await Promise.all(promiseArray)
+
+    return images.data;
   }
 
   async saveImage(imageUrl, outputPath) {
@@ -63,7 +79,22 @@ export class ImagesService {
     }
   }
 
-  getHistoryImages(directoryPath) {
+  async getHistoryImages(userId: string) {
+    try {
+      // 读取目录下的所有文件
+      this.checkDir()
+
+      const filenames = await this.prisma.image.findMany({
+        where: {userId}
+      })
+
+      return filenames.map(item => "http://localhost:3000/images/" + item.filename)
+    } catch (error) {
+      throw new Error(`Error downloading the image: ${error}`)
+    }
+  }
+
+  getHistoryImages2(directoryPath) {
     try {
       // 读取目录下的所有文件
       this.checkDir()

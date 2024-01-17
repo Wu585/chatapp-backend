@@ -19,7 +19,7 @@ model User {
 
   messages Message[]
   chats    Chat[]
-  Images   Images[]
+  images   Image[]
 }
 
 model Chat {
@@ -75,10 +75,13 @@ model Actor {
   tagId String @map(name: "tag_id")
 }
 
-model Images {
-  id     String @id @default(uuid())
-  prompt String
-  url    String
+model Image {
+  id       String @id @default(uuid())
+  prompt   String
+  filename String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map(name: "user_id")
