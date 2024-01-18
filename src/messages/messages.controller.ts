@@ -40,7 +40,6 @@ export class MessagesController {
   @Post("normal-sse")
   @Sse()
   normalSse(@Request() req, @Body() dto: createNormalMessageDto) {
-    console.log(dto);
     return this.messagesService.normalSse(dto)
   }
 
