@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty, IsUUID } from "class-validator";
-import { Role } from "@prisma/client";
+import {IsEnum, IsNotEmpty, IsString, IsUUID} from "class-validator";
+import {Role} from "@prisma/client";
 
 export class CreateMessageDto {
   @IsNotEmpty()
@@ -14,4 +14,16 @@ export class CreateMessageDto {
 
   @IsUUID()
   chatId: string;
+}
+
+export class createNormalMessageDto {
+  @IsNotEmpty()
+  messages: {
+    role: Role
+    content: string
+  }[]
+
+  @IsNotEmpty()
+  @IsString()
+  model: string
 }

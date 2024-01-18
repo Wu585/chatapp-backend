@@ -1,6 +1,6 @@
 import {Body, Controller, Get, Post, Query, Request, Sse} from "@nestjs/common";
 import {MessagesService} from "./messages.service";
-import {CreateMessageDto} from "./dto/create-message.dto";
+import {CreateMessageDto, createNormalMessageDto} from "./dto/create-message.dto";
 import {QueryMessagesDto} from "../chats/dto/query-messages.dto";
 
 export interface MessageEvent {
@@ -30,6 +30,18 @@ export class MessagesController {
   @Sse()
   sse(@Request() req, @Body() dto: CreateMessageDto) {
     return this.messagesService.createSseMessage(req.user.id, dto);
+  }
+
+  @Post("normal-text")
+  normalText(@Request() req, @Body() dto: createNormalMessageDto) {
+    return this.messagesService.normalText(dto)
+  }
+
+  @Post("normal-sse")
+  @Sse()
+  normalSse(@Request() req, @Body() dto: createNormalMessageDto) {
+    console.log(dto);
+    return this.messagesService.normalSse(dto)
   }
 
 }

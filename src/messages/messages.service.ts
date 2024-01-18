@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {OpenaiService} from "../openai/openai.service";
-import {CreateMessageDto} from "./dto/create-message.dto";
+import {CreateMessageDto, createNormalMessageDto} from "./dto/create-message.dto";
 import {PrismaService} from "../prisma.service";
 import {Observable} from "rxjs";
 
@@ -116,6 +116,36 @@ export class MessagesService {
             content: str
           }
         });
+
+        subscriber.complete();
+      });
+    });
+  }
+
+  async normalText(dto: createNormalMessageDto) {
+    const {messages, model} = dto
+    const completion = await this.openService.openai.chat.completions.create({
+      messages,
+      model
+    });
+
+    return completion.choices[0].message.content
+  }
+
+  async normalSse(dto: createNormalMessageDto) {
+    const {messages, model} = dto
+
+    return new Observable<{ data: string }>((subscriber) => {
+      this.openService.openai.chat.completions.create({
+        model,
+        messages,
+        stream: true
+      }).then(async stream => {
+        for await (const chunk of stream) {
+          const content = chunk.choices[0]?.delta?.content;
+
+          subscriber.next({data: content || ""});
+        }
 
         subscriber.complete();
       });

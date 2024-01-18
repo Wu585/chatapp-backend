@@ -13,6 +13,16 @@ enum ImageSize {
   E = "1024x1792",
 }
 
+enum Quality {
+  Standard = "standard",
+  Hd = "hd"
+}
+
+enum Style {
+  Vivid = "vivid",
+  Natural = "natural"
+}
+
 export class CreateImageDto {
   @IsEnum(ImageModel)
   model: ImageModel
@@ -26,4 +36,10 @@ export class CreateImageDto {
   @IsString()
   @IsNotEmpty()
   prompt
+
+  @IsEnum(Quality)
+  quality: Quality
+
+  @IsEnum(Style)
+  style: Style
 }
