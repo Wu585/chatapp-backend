@@ -24,10 +24,22 @@ export class MessagesService {
     });
   }
 
+  normalCreate(userId: string, dto: CreateMessageDto) {
+    const {content, role, chatId} = dto
+    return this.prisma.message.create({
+      data: {
+        userId,
+        chatId,
+        content,
+        role
+      }
+    })
+  }
+
   async getTmpMessages(userId: string, dto: CreateMessageDto) {
     const {role, content, model, chatId} = dto;
 
-    const currentMessage = await this.prisma.message.create({
+    await this.prisma.message.create({
       data: {
         userId,
         chatId,
@@ -36,11 +48,6 @@ export class MessagesService {
       }
     });
 
-    const mapCurrentMessage = {
-      role: currentMessage.role,
-      content: currentMessage.content
-    };
-
     const messages = await this.prisma.message.findMany({
       where: {
         userId,
@@ -48,12 +55,11 @@ export class MessagesService {
       }
     });
 
-    const mapMessages = messages.map(message => ({
+    return messages.map(message => ({
       role: message.role,
       content: message.content
     }));
 
-    return [...mapMessages, mapCurrentMessage]
   }
 
   async create(userId: string, dto: CreateMessageDto) {

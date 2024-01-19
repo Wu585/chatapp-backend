@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Query, Request, Sse} from "@nestjs/common";
+import {Body, Controller, Get, Post, Query, Req, Request, Sse} from "@nestjs/common";
 import {MessagesService} from "./messages.service";
 import {CreateMessageDto, createNormalMessageDto} from "./dto/create-message.dto";
 import {QueryMessagesDto} from "../chats/dto/query-messages.dto";
@@ -19,6 +19,11 @@ export class MessagesController {
   @Get()
   findAll(@Request() req, @Query() dto: QueryMessagesDto) {
     return this.messagesService.findAll(req.user.id, dto.chatId);
+  }
+
+  @Post("normal-create")
+  normalCreate(@Req() req, @Body() dto: CreateMessageDto) {
+    return this.messagesService.normalCreate(req.user.id, dto)
   }
 
   @Post("text")

@@ -16,6 +16,7 @@ import {ReplicateModule} from './replicate/replicate.module';
 import {MusicModule} from './music/music.module';
 import {ActorsModule} from './actors/actors.module';
 import {ThrottlerGuard, ThrottlerModule} from "@nestjs/throttler";
+import { AlipayModule } from './alipay/alipay.module';
 
 @Module({
   imports: [
@@ -32,8 +33,9 @@ import {ThrottlerGuard, ThrottlerModule} from "@nestjs/throttler";
     ActorsModule,
     ThrottlerModule.forRoot([{
       ttl: 60000,
-      limit: 10,
+      limit: 100,
     }]),
+    AlipayModule,
   ],
   controllers: [AppController],
   providers: [
