@@ -42,4 +42,8 @@ export class CreateImageDto {
 
   @IsEnum(Style)
   style: Style
+
+  @IsString()
+  @IsNotEmpty()
+  user: string
 }

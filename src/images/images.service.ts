@@ -18,7 +18,7 @@ export class ImagesService {
   }
 
   async create(userId: string, dto: CreateImageDto) {
-    const {model, prompt, n, size, style, quality} = dto
+    const {model, prompt, n, size, style, quality, user} = dto
 
     const images = await this.openaiService.openai.images.generate({
       model,
@@ -26,7 +26,8 @@ export class ImagesService {
       n,
       size,
       quality,
-      style
+      style,
+      user
     })
 
     const imagesDirectoryPath = join(__dirname, "../tmp-images")
