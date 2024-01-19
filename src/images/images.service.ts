@@ -6,6 +6,7 @@ import {HttpService} from "@nestjs/axios";
 import {join} from "path"
 import * as fs from "fs"
 import {PrismaService} from "../prisma.service";
+import * as process from "process";
 
 @Injectable()
 export class ImagesService {
@@ -90,7 +91,7 @@ export class ImagesService {
         where: {userId}
       })
 
-      return filenames.map(item => "http://localhost:3000/images/" + item.filename)
+      return filenames.map(item => `${process.env.ImageUrl}/images/` + item.filename)
     } catch (error) {
       throw new Error(`Error downloading the image: ${error}`)
     }
@@ -100,7 +101,7 @@ export class ImagesService {
     try {
       // 读取目录下的所有文件
       this.checkDir()
-      return fs.readdirSync(directoryPath).map(item => "http://localhost:3000/images/" + item);
+      return fs.readdirSync(directoryPath).map(item => `${process.env.ImageUrl}/images/` + item);
     } catch (error) {
       throw new Error(`Error downloading the image: ${error}`)
     }
