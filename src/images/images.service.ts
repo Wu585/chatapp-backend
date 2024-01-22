@@ -7,13 +7,16 @@ import {join} from "path"
 import * as fs from "fs"
 import {PrismaService} from "../prisma.service";
 import * as process from "process";
+import {ConfigService} from "@nestjs/config";
+import {ConfigEnum} from "../enum/config.enum";
 
 @Injectable()
 export class ImagesService {
   constructor(
     private readonly openaiService: OpenaiService,
     private readonly httpService: HttpService,
-    private readonly prisma: PrismaService
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService
   ) {
   }
 
@@ -92,7 +95,7 @@ export class ImagesService {
         where: {userId}
       })
 
-      return filenames.map(item => `${process.env.ImageUrl}/images/` + item.filename)
+      return filenames.map(item => `${this.configService.get(ConfigEnum.ImageUrl)}/images/` + item.filename)
     } catch (error) {
       throw new Error(`Error downloading the image: ${error}`)
     }
@@ -102,7 +105,7 @@ export class ImagesService {
     try {
       // 读取目录下的所有文件
       this.checkDir()
-      return fs.readdirSync(directoryPath).map(item => `${process.env.ImageUrl}/images/` + item);
+      return fs.readdirSync(directoryPath).map(item => `${this.configService.get(ConfigEnum.ImageUrl)}/images/` + item);
     } catch (error) {
       throw new Error(`Error downloading the image: ${error}`)
     }

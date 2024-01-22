@@ -2,18 +2,20 @@ import {Injectable} from '@nestjs/common';
 import AlipaySdk from "alipay-sdk";
 import * as process from "process";
 import AliPayForm from "alipay-sdk/lib/form";
+import {ConfigService} from "@nestjs/config";
+import {ConfigEnum} from "../enum/config.enum";
 
 @Injectable()
 export class AlipayService {
   alipay: AlipaySdk
 
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
     this.alipay = new AlipaySdk({
       appId: "2021004131652401",
       signType: "RSA2",
       gateway: "https://openapi.alipay.com/gateway.do",
-      alipayPublicKey: process.env.AlipayPublicKey,
-      privateKey: process.env.PrivateKey
+      alipayPublicKey: this.configService.get(ConfigEnum.AlipayPublicKey),
+      privateKey: this.configService.get(ConfigEnum.PrivateKey)
     })
   }
 

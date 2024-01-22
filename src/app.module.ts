@@ -16,10 +16,22 @@ import {ReplicateModule} from './replicate/replicate.module';
 import {MusicModule} from './music/music.module';
 import {ActorsModule} from './actors/actors.module';
 import {ThrottlerGuard, ThrottlerModule} from "@nestjs/throttler";
-import { AlipayModule } from './alipay/alipay.module';
+import {AlipayModule} from './alipay/alipay.module';
+import {ConfigModule} from "@nestjs/config";
+import * as dotenv from "dotenv"
+import * as process from "process";
+
+const envFilePath = `.env.${process.env.NODE_ENV || "development"}`
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: envFilePath,
+      load: [() => dotenv.config({
+        path: ".env"
+      })]
+    }),
     AuthModule,
     UsersModule,
     MessagesModule,

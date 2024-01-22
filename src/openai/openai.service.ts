@@ -1,10 +1,11 @@
 import {Injectable} from "@nestjs/common";
 import {HttpsProxyAgent} from "https-proxy-agent";
 import OpenAI from "openai";
-import * as process from "process";
 import {Observable} from "rxjs";
 import {PrismaService} from "../prisma.service";
 import {CreateMessageDto} from "../messages/dto/create-message.dto";
+import {ConfigService} from "@nestjs/config";
+import {ConfigEnum} from "../enum/config.enum";
 
 const agent = new HttpsProxyAgent("http://127.0.0.1:7890");
 
@@ -14,9 +15,9 @@ export type ChatCompletionRequestMessage = OpenAI.Chat.Completions.ChatCompletio
 export class OpenaiService {
   openai: OpenAI;
 
-  constructor() {
+  constructor(private readonly configService: ConfigService) {
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY1,
+      apiKey: this.configService.get(ConfigEnum.OPENAI_API_KEY1),
       httpAgent: agent
     });
   }
